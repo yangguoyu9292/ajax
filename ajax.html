@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Ajax二级联动</title>
+	</head>
+	<script src="xhr.js"></script>
+	<body>
+			<fieldset>
+			<legend>用户注册</legend>
+				<table>
+					<tr>
+						<td>用户名：</td>
+						<td><input type="text"name="user" /></td>
+					</tr>
+					<tr>
+						<td>密码：</td>
+						<td><input type="password"name="pwd" /></td>
+					</tr>
+					<tr>
+						<td>确认密码:</td>
+						<td><input type="password"name="rpwd" /></td>
+					</tr>
+					<tr>
+						<td>Email:</td>
+						<td><input type="email"name="email" /></td>
+						<tr>
+							<td>地址：</td>
+							<td>
+								<select id="province">
+									<option>请选择</option>
+									<option>1 2 3</option>
+									<option>4 5 6</option>
+									<option>7 8 9</option>
+								</select>
+								<select id="city">
+									<option>请选择</option>
+								</select>
+							</td>
+						</tr>
+					</tr>
+					<tr>
+						<td><input type="submit"  value="注册"/></td>
+					</tr>
+				</table>
+		</fieldset>
+		<script>
+		  var provinceElement=document.getElementById("province");
+		  provinceElement.onchange=function(){
+			var cityElement=document.getElementById("city");
+		 	var opts=cityElement.getElementsByTagName("option");
+			for(var z=1;z<opts.length;z++){
+				cityElement.removeChild(opts[z]);
+				z--;
+			}
+		  	var provinceValue=provinceElement.value;
+		  	if(provinceValue!="请选择"){
+			var xhr=getXhr();
+		  	xhr.open("post","server.php");
+		  	xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+		  	xhr.send("province="+provinceValue);
+		  	xhr.onreadystatechange=function(){
+		  		if(xhr.readyState == 4 && xhr.status == 200){
+		  			var data=xhr.responseText;
+					var cities=data.split(",");
+		  				for(var i=0;i<cities.length;i++){
+		 		var cityValue=cities[i];
+		 		var option=document.createElement("option");
+		 		var textNode=document.createTextNode(cityValue);
+		 		option.appendChild(textNode);
+		 		
+		 		 cityElement.appendChild(option);
+		 	}
+		  		}
+		  	}
+}
+}
+		  
+		</script>
+	</body>
+</html>
